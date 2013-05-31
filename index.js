@@ -48,7 +48,7 @@ var collectMetrics = function () {
 
 // execute on a chron
 new CronJob({
-    cronTime : '* * * * * *', // runs every minute
+    cronTime : '00 * * * * *', // runs every minute
     onTick   : collectMetrics,
     start    : true,
     timeZone : 'America/Los_Angeles'
