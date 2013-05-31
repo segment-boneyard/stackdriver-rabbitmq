@@ -34,6 +34,7 @@ var collectMetrics = function () {
     });
 
     // Memory information
+    // http://www.rabbitmq.com/memory-use.html
     rabbitmq.memory(function (memory) {
         stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Total', memory.total);
         stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Processes', memory.processes);

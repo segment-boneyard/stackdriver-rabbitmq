@@ -1,6 +1,13 @@
 {
   "name": "stackdriver-rabbitmq",
   "version": "0.0.1",
+  "description": "A nodecron that checks on rabbitmq's status, and submits the stats to Stackdriver.",
+  "author": "Segment.io <friends@segment.io>",
+  "url": "https://github.com/segmentio/stackdriver-rabbitmq",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/segmentio/stackdriver-rabbitmq.git"
+  },
   "scripts": {
     "start": "node index"
   },
@@ -10,5 +17,6 @@
     "time": "*",
     "rabbitmq-monitor": "*",
     "stackdriver-custom": "*"
-  }
+  },
+  "license": "MIT"
 }
