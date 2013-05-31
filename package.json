@@ -1,0 +1,14 @@
+{
+  "name": "stackdriver-rabbitmq",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "underscore": "*",
+    "cron": "*",
+    "rabbitmq-monitor": "*",
+    "stackdriver-custom": "*",
+    "commander": "*"
+  }
+}
