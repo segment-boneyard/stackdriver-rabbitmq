@@ -1,6 +1,6 @@
 {
   "name": "stackdriver-rabbitmq",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A nodecron that checks on rabbitmq's status, and submits the stats to Stackdriver.",
   "author": "Segment.io <friends@segment.io>",
   "url": "https://github.com/segmentio/stackdriver-rabbitmq",
