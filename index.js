@@ -4,6 +4,8 @@ var _           = require('underscore')
   , Stackdriver = require('stackdriver-custom')
   , conf        = require('./conf.js');
 
+
+var hostname = require('os').hostname();
 var stackdriver = new Stackdriver(conf);
 
 var collectMetrics = function () {
@@ -16,32 +18,32 @@ var collectMetrics = function () {
         var totalMessages = _.reduce(queues, function (memo, queue) {
             return (memo + queue.messages);
         }, 0);
-        stackdriver.sendMetric('RabbitMQ Total Queued Messages', totalMessages);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Total Queued Messages', totalMessages);
 
         // Messages ready
         var readyMessages = _.reduce(queues, function (memo, queue) {
             return (memo + queue.messages_ready);
         }, 0);
-        stackdriver.sendMetric('RabbitMQ Total Ready Messages', readyMessages);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Total Ready Messages', readyMessages);
 
         // Messages unacked
         var unackedMessages = _.reduce(queues, function (memo, queue) {
             return (memo + queue.messages_unacknowledged);
         }, 0);
-        stackdriver.sendMetric('RabbitMQ Total Unacknowledged Messages', unackedMessages);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Total Unacknowledged Messages', unackedMessages);
     });
 
     // Memory information
     rabbitmq.memory(function (memory) {
-        stackdriver.sendMetric('RabbitMQ Memory: Total', memory.total);
-        stackdriver.sendMetric('RabbitMQ Memory: Processes', memory.processes);
-        stackdriver.sendMetric('RabbitMQ Memory: Processes Used', memory.processes_used);
-        stackdriver.sendMetric('RabbitMQ Memory: System', memory.system);
-        stackdriver.sendMetric('RabbitMQ Memory: Atom', memory.atom);
-        stackdriver.sendMetric('RabbitMQ Memory: Atom Used', memory.atom_used);
-        stackdriver.sendMetric('RabbitMQ Memory: Binary', memory.binary);
-        stackdriver.sendMetric('RabbitMQ Memory: Code', memory.code);
-        stackdriver.sendMetric('RabbitMQ Memory: ETS', memory.ets);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Total', memory.total);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Processes', memory.processes);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Processes Used', memory.processes_used);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: System', memory.system);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Atom', memory.atom);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Atom Used', memory.atom_used);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Binary', memory.binary);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: Code', memory.code);
+        stackdriver.sendMetric('['+hostname+'] RabbitMQ Memory: ETS', memory.ets);
     });
 };
 
