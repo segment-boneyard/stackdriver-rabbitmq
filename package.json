@@ -8,7 +8,6 @@
     "underscore": "*",
     "cron": "*",
     "rabbitmq-monitor": "*",
-    "stackdriver-custom": "*",
-    "commander": "*"
+    "stackdriver-custom": "*"
   }
 }
