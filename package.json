@@ -16,7 +16,8 @@
     "cron": "*",
     "time": "*",
     "rabbitmq-monitor": "*",
-    "stackdriver-custom": "*"
+    "stackdriver-custom": "*",
+    "request": "*"
   },
   "license": "MIT"
 }
