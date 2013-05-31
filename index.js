@@ -8,13 +8,40 @@ var stackdriver = new Stackdriver(conf);
 
 var collectMetrics = function () {
 
-    rabbitmq.listQueues(conf.virtualHostPath, 'messages name', function (queues) {
-        var sum = _.reduce(queues, function (memo, queue) {
+    // Queue information
+    var fields = ['messages', 'messages_ready', 'messages_unacknowledged','name'];
+    rabbitmq.listQueues(conf.virtualHostPath, fields, function (queues) {
+
+        // Total messages
+        var totalMessages = _.reduce(queues, function (memo, queue) {
             return (memo + queue.messages);
         }, 0);
+        stackdriver.sendMetric('RabbitMQ Total Queued Messages', totalMessages);
 
-        sum += Math.random() * 100;
-        stackdriver.sendMetric('test random messages count', sum);
+        // Messages ready
+        var readyMessages = _.reduce(queues, function (memo, queue) {
+            return (memo + queue.messages_ready);
+        }, 0);
+        stackdriver.sendMetric('RabbitMQ Total Ready Messages', readyMessages);
+
+        // Messages unacked
+        var unackedMessages = _.reduce(queues, function (memo, queue) {
+            return (memo + queue.messages_unacknowledged);
+        }, 0);
+        stackdriver.sendMetric('RabbitMQ Total Unacknowledged Messages', unackedMessages);
+    });
+
+    // Memory information
+    rabbitmq.memory(function (memory) {
+        stackdriver.sendMetric('RabbitMQ Memory: Total', memory.total);
+        stackdriver.sendMetric('RabbitMQ Memory: Processes', memory.processes);
+        stackdriver.sendMetric('RabbitMQ Memory: Processes Used', memory.processes_used);
+        stackdriver.sendMetric('RabbitMQ Memory: System', memory.system);
+        stackdriver.sendMetric('RabbitMQ Memory: Atom', memory.atom);
+        stackdriver.sendMetric('RabbitMQ Memory: Atom Used', memory.atom_used);
+        stackdriver.sendMetric('RabbitMQ Memory: Binary', memory.binary);
+        stackdriver.sendMetric('RabbitMQ Memory: Code', memory.code);
+        stackdriver.sendMetric('RabbitMQ Memory: ETS', memory.ets);
     });
 };
 
