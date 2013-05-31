@@ -37,14 +37,18 @@ var collectMetrics = function () {
     // http://www.rabbitmq.com/memory-use.html
     rabbitmq.memory(function (memory) {
         stackdriver.sendMetric('['+hostname+'] RMQ Memory: Total', memory.total);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Processes', memory.processes);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Processes Used', memory.processes_used);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: System', memory.system);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Connection Processes', memory.connection_procs);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Queue Processes', memory.queue_procs);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other Processes', memory.other_proc);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Plugins', memory.plugins);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Mnesia', memory.mnesia);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Mgmt DB', memory.mgmt_db);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Msg Index', memory.msg_index);
         stackdriver.sendMetric('['+hostname+'] RMQ Memory: Atom', memory.atom);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Atom Used', memory.atom_used);
         stackdriver.sendMetric('['+hostname+'] RMQ Memory: Binary', memory.binary);
         stackdriver.sendMetric('['+hostname+'] RMQ Memory: Code', memory.code);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: ETS', memory.ets);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other ETS', memory.other_ets);
+        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other System', memory.other_system);
     });
 };
 
