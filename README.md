@@ -13,7 +13,7 @@ A nodecron that checks on rabbitmq's status, and submits the stats to Stackdrive
 ### Configuration
 Copy `conf.template.js` to `conf.js` and fill it in with your own configuration:
 
-* `apiKey` and `customerId` come from [Stackdriver](https://app.stackdriver.com/settings/apikeys)
+* `apiKey` and `customerId` come from your [Stackdriver profile](https://app.stackdriver.com/settings/apikeys)
 * `virtualHostPath` is the virtual host path on the RabbitMQ instance you want to monitor
 
 ### Run
