@@ -17,7 +17,9 @@ Copy `conf.template.js` to `conf.js` and fill it in with your own configuration:
 * `virtualHostPath` is the virtual host path on the RabbitMQ instance you want to monitor
 
 ### Run
-`node stackdriver-rabbitmq/index.js`
+```bash
+node stackdriver-rabbitmq/index.js
+```
 
 You'll probably want to [run it in the background](http://stackoverflow.com/questions/4018154/node-js-as-a-background-service/15616912#15616912).
 
