@@ -7,7 +7,7 @@ A nodecron that checks on rabbitmq's status, and submits the stats to Stackdrive
 
 ### Setup
 
-1. Install node.js
+1. Install [node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 2. git clone https://github.com/segmentio/stackdriver-rabbitmq.git
 
 ### Configuration
