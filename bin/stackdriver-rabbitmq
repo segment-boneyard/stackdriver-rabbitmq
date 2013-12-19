@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var program = require('commander');
 var Stackdriver = require('stackdriver-custom');
 var Cron = require('cron').CronJob;
