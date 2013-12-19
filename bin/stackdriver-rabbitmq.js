@@ -1,0 +1,38 @@
+var program = require('commander');
+var Stackdriver = require('stackdriver-custom');
+var Cron = require('cron').CronJob;
+var metrics = require('../');
+
+
+/**
+ * Start off our cron job
+ */
+
+function run (options) {
+  var stackdriver = new Stackdriver(options.apiKey, options.instance);
+
+  // set up a cron job so that our metrics are kept in sync on the minute
+  var job = new Cron('00 * * * * *', function () {
+    metrics(stackdriver, options);
+  });
+
+  job.start();
+}
+
+
+program
+  .version('0.0.1')
+  .option('--key <key>', 'Stackdriver api key')
+  .option('--virtualHost <path>', 'RabbitMQ virtual host path', '/')
+  .option('--instance <id>', 'EC2 instance id')
+  .parse(process.argv);
+
+
+if (!program.key) throw new Error('argument "key" is required');
+
+
+run({
+  apiKey: program.key,
+  virtualHost: program.virtualHost,
+  instance: program.instance
+});

@@ -5,20 +5,12 @@ A nodecron that checks on rabbitmq's status, and submits the stats to Stackdrive
 
 ## Usage
 
-### Setup
-
-1. Install [node.js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
-2. git clone https://github.com/segmentio/stackdriver-rabbitmq.git
-
-### Configuration
-Copy `conf.template.js` to `conf.js` and fill it in with your own configuration:
-
-* `apiKey` and `customerId` come from your [Stackdriver profile](https://app.stackdriver.com/settings/apikeys)
-* `virtualHostPath` is the virtual host path on the RabbitMQ instance you want to monitor
-
-### Run
-```bash
-node stackdriver-rabbitmq/index.js
+``` shell
+$ npm install -g stackdriver-rabbitmq
+$ stackdriver-rabbitmq \
+  --key [stackdriver-api-key] \
+  --instance [instance-id] \
+  --virtualHost [path]
 ```
 
 You'll probably want to [run it in the background](http://stackoverflow.com/questions/4018154/node-js-as-a-background-service/15616912#15616912).

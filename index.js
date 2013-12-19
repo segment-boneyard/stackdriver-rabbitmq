@@ -1,63 +1,59 @@
-var _           = require('underscore')
-  , CronJob     = require('cron').CronJob
-  , rabbitmq    = require('rabbitmq-monitor')
-  , Stackdriver = require('stackdriver-custom')
-  , conf        = require('./conf.js');
+var rabbitmq = require('rabbitmq-monitor');
+var sum = require('sum.js');
+var debug = require('debug')('stackdriver-rabbitmq');
 
 
-var hostname = require('os').hostname();
-var stackdriver = new Stackdriver(conf);
+/**
+ * module `exports`.
+ */
 
-var collectMetrics = function () {
-
-    // Queue information
-    var fields = ['messages', 'messages_ready', 'messages_unacknowledged','name'];
-    rabbitmq.listQueues(conf.virtualHostPath, fields, function (queues) {
-
-        // Total messages
-        var totalMessages = _.reduce(queues, function (memo, queue) {
-            return (memo + queue.messages);
-        }, 0);
-        stackdriver.sendMetric('['+hostname+'] RMQ Queued Messages', totalMessages);
-
-        // Messages ready
-        var readyMessages = _.reduce(queues, function (memo, queue) {
-            return (memo + queue.messages_ready);
-        }, 0);
-        stackdriver.sendMetric('['+hostname+'] RMQ Ready Messages', readyMessages);
-
-        // Messages unacked
-        var unackedMessages = _.reduce(queues, function (memo, queue) {
-            return (memo + queue.messages_unacknowledged);
-        }, 0);
-        stackdriver.sendMetric('['+hostname+'] RMQ Unacked Messages', unackedMessages);
-    });
-
-    // Memory information
-    // http://www.rabbitmq.com/memory-use.html
-    rabbitmq.memory(function (memory) {
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Total', memory.total);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Connection Processes', memory.connection_procs);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Queue Processes', memory.queue_procs);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other Processes', memory.other_proc);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Plugins', memory.plugins);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Mnesia', memory.mnesia);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Mgmt DB', memory.mgmt_db);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Msg Index', memory.msg_index);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Atom', memory.atom);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Binary', memory.binary);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Code', memory.code);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other ETS', memory.other_ets);
-        stackdriver.sendMetric('['+hostname+'] RMQ Memory: Other System', memory.other_system);
-    });
-};
+module.exports = collect;
 
 
-// execute on a chron
-new CronJob({
-    cronTime : '00 * * * * *', // runs every minute
-    onTick   : collectMetrics,
-    start    : true,
-    timeZone : 'America/Los_Angeles'
-});
+/**
+ * Collect our metrics and send them to the stackdriver instance.
+ *
+ * @param {Stackdriver} stackdriver
+ * @param {Object} options
+ */
 
+function collect (stackdriver, options) {
+  debug('collecting stackdriver metrics %j', options);
+
+  var fields = [
+    'messages',
+    'messages_ready',
+    'messages_unacknowledged',
+    'name'
+  ];
+
+  // Send the total counts for our queues
+  rabbitmq.listQueues(options.virtualHost, fields, function (queues) {
+    var total = sum(queues, 'messages');
+    var ready = sum(queues, 'messages_ready');
+    var unacked = sum(queues, 'messages_unacknowledged');
+
+    stackdriver
+      .send('Rabbit Queued Messages', total)
+      .send('Rabbit Ready Messages', ready)
+      .send('Rabbit Unacked Messages', unacked);
+  });
+
+  // Send our memory metrics.
+  rabbitmq.memory(function (memory) {
+    stackdriver
+      .send('Rabbit Memory: Total', memory.total)
+      .send('Rabbit Memory: Connection Processes', memory.connection_procs)
+      .send('Rabbit Memory: Queue Processes', memory.queue_procs)
+      .send('Rabbit Memory: Other Processes', memory.other_proc)
+      .send('Rabbit Memory: Plugins', memory.plugins)
+      .send('Rabbit Memory: Mnesia', memory.mnesia)
+      .send('Rabbit Memory: Mgmt DB', memory.mgmt_db)
+      .send('Rabbit Memory: Msg Index', memory.msg_index)
+      .send('Rabbit Memory: Atom', memory.atom)
+      .send('Rabbit Memory: Binary', memory.binary)
+      .send('Rabbit Memory: Code', memory.code)
+      .send('Rabbit Memory: Other ETS', memory.other_ets)
+      .send('Rabbit Memory: Other System', memory.other_system);
+  });
+}
