@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/segmentio/stackdriver-rabbitmq.git"
   },
-  "bin": "./bin/stackdriver-rabbitmq.js",
+  "bin": "./bin/stackdriver-rabbitmq",
   "dependencies": {
     "rabbitmq-monitor": "0.0.5",
     "stackdriver-custom": "~0.2.0",
